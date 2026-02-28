@@ -4,6 +4,7 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend
 } from 'recharts';
 import { FiShoppingBag, FiDollarSign, FiClock, FiAlertCircle } from 'react-icons/fi';
+import Card from '@/components/ui/Card';
 
 const metrics = [
   { title: "Total Orders (Today)", value: "24", icon: FiShoppingBag, color: "text-blue-600 bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400" },

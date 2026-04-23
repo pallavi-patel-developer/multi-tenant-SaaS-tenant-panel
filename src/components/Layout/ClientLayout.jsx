@@ -1,11 +1,31 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
 import clsx from 'clsx';
 
 export default function ClientLayout({ children }) {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const isLoginPage = pathname === '/login';
+
+  // Route guard — redirect to /login if no token and not already there
+  useEffect(() => {
+    if (!isLoginPage) {
+      const token = localStorage.getItem('tenant_token');
+      if (!token) {
+        router.replace('/login');
+      }
+    }
+  }, [pathname, isLoginPage, router]);
+
+  // Render login page full-screen (no sidebar/navbar)
+  if (isLoginPage) {
+    return <>{children}</>;
+  }
 
   return (
     <div className="flex h-screen w-full bg-gray-50 dark:bg-gray-950">

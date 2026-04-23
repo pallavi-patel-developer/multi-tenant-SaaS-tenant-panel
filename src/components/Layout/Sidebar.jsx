@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
 import {
   FiHome, FiShoppingBag, FiBox, FiUsers, FiBarChart2,
@@ -28,6 +29,12 @@ const ALL_NAV_ITEMS = [
 const Sidebar = ({ isCollapsed, toggleSidebar }) => {
   const pathname = usePathname();
   const { features, logout } = useTenantAuth();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    logout();
+    router.push('/login');
+  };
 
   // Only show items whose feature is null (always) OR is present in the tenant's feature list
   const navItems = ALL_NAV_ITEMS.filter(item =>
@@ -92,7 +99,7 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
       {/* Footer */}
       <div className="p-4 border-t border-gray-100 dark:border-gray-800">
         <button
-          onClick={logout}
+          onClick={handleLogout}
           className={clsx(
             "flex w-full items-center gap-3 rounded-lg p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors",
             isCollapsed ? "justify-center" : ""

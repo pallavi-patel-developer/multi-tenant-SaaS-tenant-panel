@@ -20,7 +20,7 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const res = await fetch('http://localhost:5000/api/v1/tenant/auth/login', {
+      const res = await fetch('http://localhost:5001/api/v1/tenant/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ tenantId, password }),

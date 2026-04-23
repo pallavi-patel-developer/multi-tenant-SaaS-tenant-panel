@@ -1,24 +1,38 @@
 "use client";
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
-  FiHome, FiShoppingBag, FiBox, FiUsers, FiBarChart2, FiActivity, FiSettings, FiLogOut, FiMenu
+  FiHome, FiShoppingBag, FiBox, FiUsers, FiBarChart2,
+  FiActivity, FiSettings, FiLogOut, FiBriefcase, FiTool
 } from 'react-icons/fi';
+import { MdOutlineBedroomParent, MdOutlineLocalPharmacy } from 'react-icons/md';
 import clsx from 'clsx';
+import { useTenantAuth } from '../../context/TenantAuthContext';
+
+// All possible nav items — feature: null = always visible, otherwise gated
+const ALL_NAV_ITEMS = [
+  { icon: FiHome,        href: '/dashboard',  label: 'Dashboard',   feature: null },
+  { icon: FiShoppingBag, href: '/orders',     label: 'Orders',      feature: 'f_billing_management' },
+  { icon: FiBox,         href: '/inventory',  label: 'Inventory',   feature: 'f_stock_quantity' },
+  { icon: FiUsers,       href: '/staff',      label: 'Staff',       feature: 'f_user_management' },
+  { icon: FiBarChart2,   href: '/reports',    label: 'Reports',     feature: 'f_reports_analytics' },
+  { icon: MdOutlineBedroomParent, href: '/rooms', label: 'Rooms',   feature: 'f_room_management' },
+  { icon: MdOutlineLocalPharmacy, href: '/pharmacy', label: 'Pharmacy', feature: 'f_drug_licensing' },
+  { icon: FiTool,        href: '/production', label: 'Production',  feature: 'f_manufacturing_dispatch' },
+  { icon: FiBriefcase,   href: '/products',   label: 'Products',    feature: 'f_product_management' },
+  { icon: FiActivity,    href: '/audit-logs', label: 'Audit Logs',  feature: null },
+  { icon: FiSettings,    href: '/settings',   label: 'Settings',    feature: null },
+];
 
 const Sidebar = ({ isCollapsed, toggleSidebar }) => {
   const pathname = usePathname();
+  const { features, logout } = useTenantAuth();
 
-  const navItems = [
-    { icon: FiHome, href: '/dashboard', label: 'Dashboard' },
-    { icon: FiShoppingBag, href: '/orders', label: 'Orders' },
-    { icon: FiBox, href: '/inventory', label: 'Inventory' },
-    { icon: FiUsers, href: '/staff', label: 'Staff' },
-    { icon: FiBarChart2, href: '/reports', label: 'Reports' },
-    { icon: FiActivity, href: '/audit-logs', label: 'Audit Logs' },
-    { icon: FiSettings, href: '/settings', label: 'Settings' },
-  ];
+  // Only show items whose feature is null (always) OR is present in the tenant's feature list
+  const navItems = ALL_NAV_ITEMS.filter(item =>
+    item.feature === null || features.includes(item.feature)
+  );
 
   return (
     <div
@@ -77,10 +91,13 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
 
       {/* Footer */}
       <div className="p-4 border-t border-gray-100 dark:border-gray-800">
-        <button className={clsx(
-          "flex w-full items-center gap-3 rounded-lg p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors",
-          isCollapsed ? "justify-center" : ""
-        )}>
+        <button
+          onClick={logout}
+          className={clsx(
+            "flex w-full items-center gap-3 rounded-lg p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors",
+            isCollapsed ? "justify-center" : ""
+          )}
+        >
           <FiLogOut size={20} className="shrink-0" />
           {!isCollapsed && <span className="whitespace-nowrap text-sm font-medium">Logout</span>}
         </button>

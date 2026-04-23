@@ -6,12 +6,9 @@ import { useTenantAuth } from '../../context/TenantAuthContext';
 const Navbar = ({ isSidebarCollapsed, toggleSidebar }) => {
   const { tenant } = useTenantAuth();
 
-  // Generate initials from email (e.g. "pallavi@store.com" → "PA")
-  const initials = tenant?.email
-    ? tenant.email.slice(0, 2).toUpperCase()
-    : 'T';
+  const displayName = tenant?.businessName || tenant?.email || 'Tenant';
 
-  const displayName = tenant?.email ?? 'Tenant';
+  const initials = displayName.slice(0, 2).toUpperCase();
 
   return (
     <header className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-gray-200 bg-white px-6 shadow-sm dark:bg-gray-900 dark:border-gray-800">

@@ -2,13 +2,13 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTenantAuth } from '../../context/TenantAuthContext';
-import { FiMail, FiLock, FiEye, FiEyeOff, FiLoader } from 'react-icons/fi';
+import { FiHash, FiLock, FiEye, FiEyeOff, FiLoader } from 'react-icons/fi';
 
 export default function LoginPage() {
   const router = useRouter();
   const { login } = useTenantAuth();
 
-  const [email, setEmail] = useState('');
+  const [tenantId, setTenantId] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -23,7 +23,7 @@ export default function LoginPage() {
       const res = await fetch('http://localhost:5000/api/v1/tenant/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ tenantId, password }),
       });
 
       const data = await res.json();
@@ -72,15 +72,15 @@ export default function LoginPage() {
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
 
-            {/* Email */}
+            {/* Tenant ID */}
             <div className="relative">
-              <FiMail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+              <FiHash className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
               <input
-                id="tenant-email"
-                type="email"
-                placeholder="your@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                id="tenant-id-input"
+                type="text"
+                placeholder="TENANTID-xxxxxxxxxxxx"
+                value={tenantId}
+                onChange={(e) => setTenantId(e.target.value)}
                 required
                 className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 text-sm outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
               />

@@ -35,4 +35,10 @@ export function TenantAuthProvider({ children }) {
     );
 }
 
-export const useTenantAuth = () => useContext(TenantAuthContext);
+export const useTenantAuth = () => {
+    const context = useContext(TenantAuthContext);
+    if (context === null) {
+        throw new Error('useTenantAuth must be used inside <TenantAuthProvider>');
+    }
+    return context;
+};
